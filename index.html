@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>แจ้งของหาย - Lost Items Report (Firebase Edition)</title>
+    <title>แจ้งของหาย - Lost Items Report</title>
     <style>
         * {
             margin: 0;
@@ -169,12 +169,12 @@
 <div class="container">
     <div class="header">
         <h1>🔍 แจ้งของหาย</h1>
-        <p>ระบบรายงานสิ่งของสูญหาย - ข้อมูลอัปเดตแบบ Real-time</p>
+        <p>ระบบรายงานสิ่งของสูญหาย</p>
     </div>
 
     <div class="form-section">
         <div class="success-message" id="successMessage">
-            ✅ บันทึกรายงานของหายเรียบร้อยแล้ว! ข้อมูลจะปรากฏด้านล่างทันที
+            ✅ บันทึกรายงานของหายเรียบร้อยแล้ว!
         </div>
 
         <form id="lostItemForm">
@@ -245,7 +245,6 @@
     import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } 
         from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // 1. *** แก้ไขตรงนี้: นำข้อมูลจาก Firebase Console มาวาง ***
 const firebaseConfig = {
   apiKey: "AIzaSyDni4qYbb-p6btwF5btGYp6junEtrpnVDE",
   authDomain: "finding-missing-item.firebaseapp.com",
@@ -256,12 +255,11 @@ const firebaseConfig = {
   measurementId: "G-8YJ82Z6S1N"
     };
 
-    // เริ่มต้นเชื่อมต่อ
+
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     const reportsCol = collection(db, "lostItems");
 
-    // ฟังก์ชันช่วยแสดงชื่อประเภทภาษาไทย
     function getCategoryText(category) {
         const categories = {
             'electronics': 'อุปกรณ์อิเล็กทรอนิกส์',
@@ -275,7 +273,7 @@ const firebaseConfig = {
         return categories[category] || category;
     }
 
-    // 2. ดึงข้อมูลแบบ Real-time (Snapshot)
+ 
     const q = query(reportsCol, orderBy("reportDate", "desc"));
     onSnapshot(q, (snapshot) => {
         const reportsList = document.getElementById('reportsList');
@@ -304,7 +302,6 @@ const firebaseConfig = {
         reportsList.innerHTML = reportsHTML;
     });
 
-    // 3. ฟังก์ชันส่งข้อมูลเมื่อกด Submit
     document.getElementById('lostItemForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         const btn = document.getElementById('submitBtn');
@@ -326,7 +323,6 @@ const firebaseConfig = {
         try {
             await addDoc(reportsCol, formData);
             
-            // แสดงข้อความสำเร็จ
             const successMessage = document.getElementById('successMessage');
             successMessage.style.display = 'block';
             setTimeout(() => { successMessage.style.display = 'none'; }, 4000);
